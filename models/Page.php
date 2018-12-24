@@ -3,7 +3,6 @@
 namespace smart\page\models;
 
 use yii\db\ActiveRecord;
-use smart\base\Translit;
 use smart\storage\components\StoredInterface;
 
 class Page extends ActiveRecord implements StoredInterface
@@ -30,15 +29,6 @@ class Page extends ActiveRecord implements StoredInterface
         }
 
         return $object;
-    }
-
-    /**
-     * Making page alias from title
-     * @return void
-     */
-    public function makeAlias()
-    {
-        $this->alias = Translit::t($this->title);
     }
 
     /**

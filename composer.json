@@ -14,7 +14,8 @@
         "yiisoft/yii2": "*",
         "yiismart/yii2-base": "*",
         "yiismart/yii2-storage": "*",
-        "vova07/yii2-imperavi-widget": "*"
+        "dkhlystov/yii2-translit": "^1.0",
+        "vova07/yii2-imperavi-widget": "^2.0"
     },
     "autoload": {
         "psr-4": {

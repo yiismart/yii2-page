@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
+use dkhlystov\helpers\Translit;
 use smart\base\BackendController;
 use smart\page\backend\filters\PageFilter;
 use smart\page\backend\forms\PageForm;
@@ -68,6 +69,7 @@ class PageController extends BackendController
 
         return $this->render('create', [
             'model' => $model,
+            'object' => $object,
         ]);
     }
 
@@ -118,6 +120,19 @@ class PageController extends BackendController
         }
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Make alias
+     * @param string $title 
+     * @return string
+     */
+    public function actionAlias($title)
+    {
+        return Json::encode([
+            'title' => $title,
+            'alias' => Translit::t($title),
+        ]);
     }
 
     /**
