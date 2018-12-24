@@ -12,9 +12,6 @@ use smart\page\backend\filters\PageFilter;
 use smart\page\backend\forms\PageForm;
 use smart\page\models\Page;
 
-// use yii\filters\AccessControl;
-// use yii\web\Controller;
-
 class PageController extends BackendController
 {
 
@@ -69,7 +66,6 @@ class PageController extends BackendController
 
         return $this->render('create', [
             'model' => $model,
-            'object' => $object,
         ]);
     }
 
