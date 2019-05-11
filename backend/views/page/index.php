@@ -23,7 +23,7 @@ $this->params['breadcrumbs'] = [
     'dataProvider' => $model->getDataProvider(),
     'filterModel' => $model,
     'rowOptions' => function ($model, $key, $index, $grid) {
-        return !$model->active ? ['class' => 'table-warning'] : [];
+        return !$model->active ? ['class' => 'table-inactive'] : [];
     },
     'columns' => [
         [
