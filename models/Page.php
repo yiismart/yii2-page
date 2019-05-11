@@ -2,12 +2,11 @@
 
 namespace smart\page\models;
 
-use yii\db\ActiveRecord;
+use smart\db\ActiveRecord;
 use smart\storage\components\StoredInterface;
 
 class Page extends ActiveRecord implements StoredInterface
 {
-
     /**
      * @inheritdoc
      */
@@ -17,15 +16,15 @@ class Page extends ActiveRecord implements StoredInterface
     }
 
     /**
-     * Find page by alias
-     * @param sring $alias page alias or id
+     * Find page by friendly URL
+     * @param sring $url page friendly URL or id
      * @return Page
      */
-    public static function findByAlias($alias)
+    public static function findByAlias($url)
     {
-        $object = static::findOne(['alias' => $alias]);
+        $object = static::findOne(['url' => $url]);
         if ($object === null) {
-            $object = static::findOne(['id' => $alias]);
+            $object = static::findOne(['id' => $url]);
         }
 
         return $object;
@@ -50,7 +49,7 @@ class Page extends ActiveRecord implements StoredInterface
      */
     public function getOldFiles()
     {
-        return $this->getFilesFromContent($this->getOldAttribute('content'));
+        return $this->getFilesFromContent($this->getOldAttribute('text'));
     }
 
     /**
@@ -58,7 +57,7 @@ class Page extends ActiveRecord implements StoredInterface
      */
     public function getFiles()
     {
-        return $this->getFilesFromContent($this->content);
+        return $this->getFilesFromContent($this->getAttribute('text'));
     }
 
     /**
@@ -66,12 +65,11 @@ class Page extends ActiveRecord implements StoredInterface
      */
     public function setFiles($files)
     {
-        $content = $this->content;
+        $content = $this->text;
         foreach ($files as $from => $to) {
             $content = str_replace($from, $to, $content);
         }
 
-        $this->content = $content;
+        $this->text = $content;
     }
-
 }

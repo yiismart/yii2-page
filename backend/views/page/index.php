@@ -15,11 +15,9 @@ $this->params['breadcrumbs'] = [
 ?>
 <h1><?= Html::encode($title) ?></h1>
 
-<?php if ($canAddPage): ?>
 <p class="form-buttons">
-    <?= Html::a(Yii::t('cms', 'Create'), ['create'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a(Yii::t('cms', 'Add'), ['create'], ['class' => 'btn btn-primary']) ?>
 </p>
-<?php endif; ?>
 
 <?= GridView::widget([
     'dataProvider' => $model->getDataProvider(),
@@ -28,16 +26,23 @@ $this->params['breadcrumbs'] = [
         return !$model->active ? ['class' => 'table-warning'] : [];
     },
     'columns' => [
-        'title',
+        [
+            'attribute' => 'title',
+            'format' => 'html',
+            'value' => function ($model, $key, $index, $column) {
+                $title = Html::tag('div', Html::encode($model->title));
+                $url = Html::tag('span', Html::encode($model->url), ['class' => 'badge badge-secondary']);
+                return $title . $url;
+            },
+        ],
         [
             'class' => 'smart\grid\ActionColumn',
-            'options' => ['style' => 'width: 80px;'],
             'template' => '{link} {update} {delete}',
             'buttons' => [
                 'link' => function($url, $model, $key) {
                     $title = Yii::t('page', 'Link');
 
-                    return Html::a('<i class="fas fa-link"></i>', ['/page/page/index', 'alias' => empty($model->alias) ? $model->id : $model->alias], [
+                    return Html::a('<i class="fas fa-link"></i>', ['/page/page/index', 'url' => $model->url], [
                         'title' => $title,
                         'aria-label' => $title,
                         'data-pjax' => 0,

@@ -1,14 +1,17 @@
-$('#pageform-makealias').on('click', function () {
-    makeAlias();
-});
-
-function makeAlias() {
-    var title = $('#pageform-title'), alias = $('#pageform-alias');
-    alias.addClass('loading');
-    $.get(alias.data('url'), {title: title.val()}, function (data) {
-        alias.removeClass('loading');
-        if (title.val() == data.title) {
-            alias.val(data.alias);
+var page = {
+    init: function() {
+        $('#make-url').on('click', this.make_url);
+    },
+    make_url: function() {
+        var $button = $(this), $input = $('#pageform-url');
+        if ($input.hasClass('state-loading')) {
+            return;
         }
-    }, 'json');
-}
+        $input.addClass('state-loading');
+        $.get($button.data('url'), {title: $('#pageform-title').val()}, function(data) {
+            $input.val(data).removeClass('state-loading');
+        }, 'json');
+    }
+};
+
+page.init();

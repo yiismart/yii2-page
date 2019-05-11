@@ -3,16 +3,15 @@
 namespace smart\page\backend\forms;
 
 use Yii;
-use yii\helpers\HtmlPurifier;
 use smart\base\Form;
+use smart\page\models\Page;
 
 class PageForm extends Form
 {
-
     /**
      * @var boolean
      */
-    public $active = true;
+    public $active = 1;
 
     /**
      * @var string
@@ -22,12 +21,17 @@ class PageForm extends Form
     /**
      * @var string
      */
-    public $alias;
+    public $url;
 
     /**
      * @var string
      */
-    public $content;
+    public $text;
+
+    /**
+     * @var integer
+     */
+    private $_id;
 
     /**
      * @inheritdoc
@@ -37,8 +41,8 @@ class PageForm extends Form
         return [
             'active' => Yii::t('page', 'Active'),
             'title' => Yii::t('page', 'Title'),
-            'alias' => Yii::t('page', 'Alias'),
-            'content' => Yii::t('page', 'Content'),
+            'url' => Yii::t('page', 'Friendly URL'),
+            'text' => Yii::t('page', 'Text'),
         ];
     }
 
@@ -50,10 +54,14 @@ class PageForm extends Form
         return [
             ['active', 'boolean'],
             ['title', 'string', 'max' => 100],
-            ['alias', 'string', 'max' => 200],
-            ['alias', 'match', 'pattern' => '/^[a-z0-9\-_]*$/'],
-            ['content', 'string'],
-            ['title', 'required'],
+            ['url', 'string', 'max' => 200],
+            ['url', 'match', 'pattern' => '/^[a-z0-9\-_]*$/'],
+            ['url', 'unique', 'targetClass' => Page::className(), 'when' => function ($model, $attribute) {
+                $object = Page::findOne($this->_id);
+                return $object === null || $object->url != $this->url;
+            }],
+            ['text', 'string'],
+            [['title', 'url'], 'required'],
         ];
     }
 
@@ -62,10 +70,12 @@ class PageForm extends Form
      */
     public function assignFrom($object)
     {
-        $this->active = $object->active == 0 ? '0' : '1';
-        $this->title = $object->title;
-        $this->alias = $object->alias;
-        $this->content = $object->content;
+        $this->active = self::fromBoolean($object->active);
+        $this->title = self::fromString($object->title);
+        $this->url = self::fromString($object->url);
+        $this->text = self::fromHtml($object->text);
+
+        $this->_id = $object->id;
 
         Yii::$app->storage->cacheObject($object);
     }
@@ -75,17 +85,13 @@ class PageForm extends Form
      */
     public function assignTo($object)
     {
-        $object->active = $this->active == 1;
-        $object->title = $this->title;
-        $object->alias = $this->alias;
+        $object->active = self::toBoolean($this->active);
+        $object->title = self::toString($this->title);
+        $object->url = self::toString($this->url);
+        $object->text = self::toHtml($this->text);
+
         $object->modifyDate = gmdate('Y-m-d H:i:s');
-        $object->content = HtmlPurifier::process($this->content, function($config) {
-            $config->set('Attr.EnableID', true);
-            $config->set('HTML.SafeIframe', true);
-            $config->set('URI.SafeIframeRegexp', '%^(?:https?:)?//(?:www.youtube.com/embed/|player.vimeo.com/video/|yandex.ru/map-widget/)%');
-        });
 
         Yii::$app->storage->storeObject($object);
     }
-
 }

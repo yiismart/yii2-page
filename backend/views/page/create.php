@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 // Title
-$title = Yii::t('page', 'Create page');
+$title = Yii::t('page', 'Add page');
 $this->title = $title . ' | ' . Yii::$app->name;
 
 // Breadcrumbs

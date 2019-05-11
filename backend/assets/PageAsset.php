@@ -6,6 +6,7 @@ use yii\web\AssetBundle;
 
 class PageAsset extends AssetBundle
 {
+    public $sourcePath = __DIR__ . '/page';
 
     public $js = [
         'page.js',
@@ -14,10 +15,4 @@ class PageAsset extends AssetBundle
     public $depends = [
         'yii\web\JqueryAsset',
     ];
-
-    public function init()
-    {
-        $this->sourcePath = __DIR__ . '/page';
-    }
-
 }

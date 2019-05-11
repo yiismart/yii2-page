@@ -9,7 +9,6 @@ use smart\page\models\Page;
 
 class PageFilter extends Page implements FilterInterface
 {
-
     /**
      * @inheritdoc
      */
@@ -41,5 +40,4 @@ class PageFilter extends Page implements FilterInterface
         $config['query'] = $query;
         return new ActiveDataProvider($config);
     }
-
 }

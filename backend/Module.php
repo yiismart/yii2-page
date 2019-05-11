@@ -8,12 +8,6 @@ use smart\base\BackendModule;
 
 class Module extends BackendModule
 {
-
-    /**
-     * @var integer|null max page count. If set to null, there are no limit to count of pages. 
-     */
-    public $maxCount;
-
     /**
      * @inheritdoc
      */
@@ -36,10 +30,9 @@ class Module extends BackendModule
         }
 
         $items['page'] = [
-            'label' => '<i class="fas fa-globe"></i> ' . Html::encode(Yii::t('page', 'Pages')),
+            'label' => '<i class="fas fa-file"></i> ' . Html::encode(Yii::t('page', 'Pages')),
             'encode' => false,
             'url' => ['/page/page/index'],
         ];
     }
-
 }

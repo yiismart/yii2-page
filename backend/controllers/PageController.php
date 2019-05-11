@@ -3,30 +3,18 @@
 namespace smart\page\backend\controllers;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
 use dkhlystov\helpers\Translit;
 use smart\base\BackendController;
+use smart\imperavi\ImperaviControllerTrait;
 use smart\page\backend\filters\PageFilter;
 use smart\page\backend\forms\PageForm;
 use smart\page\models\Page;
 
 class PageController extends BackendController
 {
-
-    /**
-     * @inheritdoc
-     * Disable csrf validation for image and file uploading
-     */
-    public function beforeAction($action)
-    {
-        if ($action->id == 'image' || $action->id == 'file') {
-            $this->enableCsrfValidation = false;
-        }
-
-        return parent::beforeAction($action);
-    }
+    use ImperaviControllerTrait;
 
     /**
      * List
@@ -39,7 +27,6 @@ class PageController extends BackendController
 
         return $this->render('index', [
             'model' => $model,
-            'canAddPage' => $this->canAddPage(),
         ]);
     }
 
@@ -49,10 +36,6 @@ class PageController extends BackendController
      */
     public function actionCreate()
     {
-        if (!$this->canAddPage()) {
-            throw new NotSupportedException('You have exceeded the maximum number of pages.');
-        }
-
         $object = new Page;
         $model = new PageForm;
 
@@ -119,65 +102,12 @@ class PageController extends BackendController
     }
 
     /**
-     * Make alias
+     * Make friendly URL
      * @param string $title 
      * @return string
      */
-    public function actionAlias($title)
+    public function actionMakeUrl($title)
     {
-        return Json::encode([
-            'title' => $title,
-            'alias' => Translit::t($title),
-        ]);
+        return Json::encode(Translit::t($title));
     }
-
-    /**
-     * Image upload
-     * @return string
-     */
-    public function actionImage()
-    {
-        $name = Yii::$app->storage->prepare('file', [
-            'image/png',
-            'image/jpg',
-            'image/gif',
-            'image/jpeg',
-            'image/pjpeg',
-        ]);
-
-        if ($name === false) {
-            throw new BadRequestHttpException(Yii::t('cms', 'Error occurred while image uploading.'));
-        }
-
-        return Json::encode([
-            ['filelink' => $name],
-        ]);
-    }
-
-    /**
-     * File upload
-     * @return string
-     */
-    public function actionFile()
-    {
-        $name = Yii::$app->storage->prepare('file');
-
-        if ($name === false) {
-            throw new BadRequestHttpException(Yii::t('cms', 'Error occurred while file uploading.'));
-        }
-
-        return Json::encode([
-            ['filelink' => $name, 'filename' => urldecode(basename($name))],
-        ]);
-    }
-
-    /**
-     * Determining if there are a restrictions for adding page
-     * @return boolean
-     */
-    private function canAddPage()
-    {
-        return $this->module->maxCount === null || Page::find()->count() < $this->module->maxCount;
-    }
-
 }
