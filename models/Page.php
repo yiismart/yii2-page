@@ -2,10 +2,10 @@
 
 namespace smart\page\models;
 
-use smart\db\ActiveRecord;
+use smart\base\Entity;
 use smart\storage\components\StoredInterface;
 
-class Page extends ActiveRecord implements StoredInterface
+class Page extends Entity implements StoredInterface
 {
     /**
      * @inheritdoc
