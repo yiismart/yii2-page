@@ -106,7 +106,7 @@ class PageController extends BackendController
      * @param string $title 
      * @return string
      */
-    public function actionMakeUrl($title)
+    public function actionMakeAlias($title)
     {
         return Json::encode(Translit::t($title));
     }

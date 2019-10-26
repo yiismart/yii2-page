@@ -1,9 +1,9 @@
 var page = {
     init: function() {
-        $('#make-url').on('click', this.make_url);
+        $('#make-alias').on('click', this.make_url);
     },
     make_url: function() {
-        var $button = $(this), $input = $('#pageform-url');
+        var $button = $(this), $input = $('#pageform-alias');
         if ($input.hasClass('state-loading')) {
             return;
         }

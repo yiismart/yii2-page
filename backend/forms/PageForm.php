@@ -21,7 +21,7 @@ class PageForm extends Form
     /**
      * @var string
      */
-    public $url;
+    public $alias;
 
     /**
      * @var string
@@ -41,7 +41,7 @@ class PageForm extends Form
         return [
             'active' => Yii::t('page', 'Active'),
             'title' => Yii::t('page', 'Title'),
-            'url' => Yii::t('page', 'Friendly URL'),
+            'alias' => Yii::t('page', 'Friendly URL'),
             'text' => Yii::t('page', 'Text'),
         ];
     }
@@ -54,44 +54,46 @@ class PageForm extends Form
         return [
             ['active', 'boolean'],
             ['title', 'string', 'max' => 100],
-            ['url', 'string', 'max' => 200],
-            ['url', 'match', 'pattern' => '/^[a-z0-9\-_]*$/'],
-            ['url', 'unique', 'targetClass' => Page::className(), 'when' => function ($model, $attribute) {
+            ['alias', 'string', 'max' => 200],
+            ['alias', 'match', 'pattern' => '/^[a-z0-9\-_]*$/'],
+            ['alias', 'unique', 'targetClass' => Page::className(), 'when' => function ($model, $attribute) {
                 $object = Page::findOne($this->_id);
-                return $object === null || $object->url != $this->url;
+                return $object === null || $object->alias != $this->alias;
             }],
             ['text', 'string'],
-            [['title', 'url'], 'required'],
+            [['title', 'alias'], 'required'],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function assignFrom($object)
+    public function map()
     {
-        $this->active = self::fromBoolean($object->active);
-        $this->title = self::fromString($object->title);
-        $this->url = self::fromString($object->url);
-        $this->text = self::fromHtml($object->text);
-
-        $this->_id = $object->id;
-
-        Yii::$app->storage->cacheObject($object);
+        return [
+            ['active', 'boolean'],
+            [['title', 'alias'], 'string'],
+            ['text', 'html'],
+        ];
     }
 
     /**
      * @inheritdoc
      */
-    public function assignTo($object)
+    public function assignFrom($object, $attributeNames = null)
     {
-        $object->active = self::toBoolean($this->active);
-        $object->title = self::toString($this->title);
-        $object->url = self::toString($this->url);
-        $object->text = self::toHtml($this->text);
+        parent::assignFrom($object, $attributeNames);
+
+        $this->_id = $object->id;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function assignTo($object, $attributeNames = null)
+    {
+        parent::assignTo($object, $attributeNames);
 
         $object->modifyDate = gmdate('Y-m-d H:i:s');
-
-        Yii::$app->storage->storeObject($object);
     }
 }

@@ -31,8 +31,8 @@ $this->params['breadcrumbs'] = [
             'format' => 'html',
             'value' => function ($model, $key, $index, $column) {
                 $title = Html::tag('div', Html::encode($model->title));
-                $url = Html::tag('span', Html::encode($model->url), ['class' => 'badge badge-secondary']);
-                return $title . $url;
+                $alias = Html::tag('span', Html::encode($model->alias), ['class' => 'badge badge-secondary']);
+                return $title . $alias;
             },
         ],
         [
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'] = [
                 'link' => function($url, $model, $key) {
                     $title = Yii::t('page', 'Link');
 
-                    return Html::a('<i class="fas fa-link"></i>', ['/page/page/index', 'url' => $model->url], [
+                    return Html::a('<i class="fas fa-link"></i>', ['/page/page/index', 'alias' => $model->alias], [
                         'title' => $title,
                         'aria-label' => $title,
                         'data-pjax' => 0,
