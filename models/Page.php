@@ -2,7 +2,7 @@
 
 namespace smart\page\models;
 
-use smart\base\Entity;
+use smart\seo\db\Entity;
 use smart\storage\components\StoredInterface;
 
 class Page extends Entity implements StoredInterface
