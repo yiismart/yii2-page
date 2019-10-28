@@ -2,10 +2,12 @@
 
 namespace smart\page\models;
 
-use smart\seo\db\Entity;
+use yii\helpers\Url;
+use smart\db\ActiveRecord;
+use smart\sitemap\behaviors\SitemapBehavior;
 use smart\storage\components\StoredInterface;
 
-class Page extends Entity implements StoredInterface
+class Page extends ActiveRecord implements StoredInterface
 {
     /**
      * @inheritdoc
@@ -13,6 +15,21 @@ class Page extends Entity implements StoredInterface
     public static function tableName()
     {
         return 'page';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'sitemap' => [
+                'class' => SitemapBehavior::className(),
+                'loc' => function($model) {
+                    return Url::toRoute(['/page/page/index', 'alias' => $model->alias]);
+                },
+            ],
+        ];
     }
 
     /**

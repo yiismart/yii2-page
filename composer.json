@@ -13,7 +13,7 @@
     "require": {
         "yiisoft/yii2": "*",
         "yiismart/yii2-base": "*",
-        "yiismart/yii2-seo": "*",
+        "yiismart/yii2-sitemap": "*",
         "yiismart/yii2-storage": "*",
         "dkhlystov/yii2-translit": "^1.0",
         "vova07/yii2-imperavi-widget": "^2.0"
