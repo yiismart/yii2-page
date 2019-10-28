@@ -34,14 +34,14 @@ class Page extends ActiveRecord implements StoredInterface
 
     /**
      * Find page by friendly URL
-     * @param sring $url page friendly URL or id
+     * @param sring $alias page friendly URL or id
      * @return Page
      */
-    public static function findByAlias($url)
+    public static function findByAlias($alias)
     {
-        $object = static::findOne(['url' => $url]);
+        $object = static::findOne(['alias' => $alias]);
         if ($object === null) {
-            $object = static::findOne(['id' => $url]);
+            $object = static::findOne(['id' => $alias]);
         }
 
         return $object;
