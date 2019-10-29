@@ -3,9 +3,7 @@
 namespace smart\page\backend\controllers;
 
 use Yii;
-use yii\helpers\Json;
 use yii\web\BadRequestHttpException;
-use dkhlystov\helpers\Translit;
 use smart\base\BackendController;
 use smart\imperavi\ImperaviControllerTrait;
 use smart\page\backend\filters\PageFilter;
@@ -99,15 +97,5 @@ class PageController extends BackendController
         }
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Make friendly URL
-     * @param string $title 
-     * @return string
-     */
-    public function actionMakeAlias($title)
-    {
-        return Json::encode(Translit::t($title));
     }
 }
